@@ -195,5 +195,5 @@ all_elements.pop(0)
 while True:
     inp = input("Enter Chemical Equation: ")
     print("Balanced Equation: " + balance(inp))
-    if input("Press s and enter to Stop program").lower() == 's':
+    if input("Press s and enter to Stop program: ").lower() == 's':
         break
