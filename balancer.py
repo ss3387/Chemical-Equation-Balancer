@@ -37,6 +37,7 @@ def count_elements(side, compound, bracket_pat, typ, element_pat, equation_eleme
     bracket_part_element = None # The element(s) which will be identified in the bracket
     modified = [] # This is the list for all identified elements in the bracket of the compound
 
+    # If there are no brackets bracket_part will be empty so it would not run the for loop
     for i in bracket_part:
 
         i = list(i) # Convert i to a list since i will be a differnet object_type and it is not subscriptable
@@ -49,25 +50,30 @@ def count_elements(side, compound, bracket_pat, typ, element_pat, equation_eleme
         else: i[1] = int(i[1])
 
         for e in bracket_part_element:
-            e = list(e)
+            e = list(e) # Convert e to a list since e will be a differnet object_type and it is not subscriptable
+            # Getting the subscript of the element in the bracket 
             if not e[1]: e[1] = 1
             else: e[1] = int(e[1])
-            e[1] *= i[1]
+            # multiplying the element subscript to bracket subscript because thats how compounds are written in chemistry
+            e[1] *= i[1] 
             modified.append(e)
     
-    elements = re.findall(element_pat, compound)
-    if bracket_part_element: elements += modified
+    elements = re.findall(element_pat, compound) # get all the element info outside the bracket of the compound
+    # Add the bracket element information to elements list
+    if bracket_part_element: elements += modified 
 
     for e in elements:
 
-        e = list(e)
+        e = list(e) # Convert e to a list since e will be a differnet object_type and it is not subscriptable
         if not e[1]: e[1] = 1
+        # Store all the element infomation in a dictionary
         dictionary = {
             'number': int(e[1]), 
             'compound': side.index(saved_compound), 
             'type': typ
         }
-
+        # equation_elements has keys as the element_symbol and their value is a list where there will multiple dictionars of occurences of element in the chemical equation
+        # However we need define the list before append any new dictionaries so a try and except would solve this problem
         try: equation_elements[e[0]].append(dictionary)
         except KeyError: 
             equation_elements[e[0]] = [dictionary]
@@ -189,3 +195,5 @@ all_elements.pop(0)
 while True:
     inp = input("Enter Chemical Equation: ")
     print("Balanced Equation: " + balance(inp))
+    if input("Press s and enter to Stop program").lower() == 's':
+        break
